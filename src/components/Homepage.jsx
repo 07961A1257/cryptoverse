@@ -1,26 +1,14 @@
 import React from "react";
 import { Col, Row, Statistic, Typography } from "antd";
-import { useGetCryptosQuery } from "../services/cryptoApi";
-import millify from "millify";
 import { Link } from "react-router-dom";
+import { useGetCryptosQuery } from "../services/cryptoApi";
+import { Cryptocurrencies, News } from "../components";
+import { safeMillify } from "./safeMillify";
 
 const { Title } = Typography;
 
-const safeMillify = (value) => {
-  if (value === null || value === undefined) {
-    return "N/A"; // Return a placeholder for invalid values
-  }
-  if (typeof value === "string") {
-    value = parseFloat(value);
-  }
-  if (isNaN(value)) {
-    return "N/A"; // Return a placeholder if the value is still not a number
-  }
-  return millify(value);
-};
-
 const Homepage = () => {
-  const { data, isFetching } = useGetCryptosQuery();
+  const { data, isFetching } = useGetCryptosQuery(10);
   const globalStats = data?.data?.stats;
   if (isFetching) return "Loading...";
   return (
@@ -65,6 +53,16 @@ const Homepage = () => {
           <Link to="/cryptocurrencies">Show More</Link>
         </Title>
       </div>
+      <Cryptocurrencies simplified />
+      <div className="home-heading-container">
+        <Title level={2} className="home-title">
+          Latest Crypto News.
+        </Title>
+        <Title level={3} className="show-more">
+          <Link to="/news">Show More</Link>
+        </Title>
+      </div>
+      <News simplified />
     </>
   );
 };
